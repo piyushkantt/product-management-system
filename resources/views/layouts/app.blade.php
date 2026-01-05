@@ -6,28 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        
-
 </head>
 <body>
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
     <a class="navbar-brand" href="{{ route('dashboard') }}">
-        Product Management System
+        Product Management
     </a>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#mainNavbar">
         <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="mainNavbar">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
             @auth
+                {{-- Common --}}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('dashboard') }}">
                         Dashboard
                     </a>
                 </li>
-                {{-- admin Navigation --}}
-               
+                {{-- Admin Navigation --}}
+                @if(auth()->user()->role === 'admin')
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.products.index') }}">
+                            Products
+                        </a>
+                    </li>
+    </li>
+                @endif
             @endauth
 
             {{-- Guest Navigation --}}
