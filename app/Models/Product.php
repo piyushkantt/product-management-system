@@ -17,5 +17,14 @@ class Product extends Model
     'category',
     'stock',
 ];
+protected static function booted()
+{
+    static::creating(function ($product) {
+        if (empty($product->image)) {
+            $product->image = 'default.png';
+        }
+    });
+}
+
 
 }

@@ -9,38 +9,41 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithValidation;
-
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterImport;
 
 class ProductsImport implements
     ToModel,
     WithHeadingRow,
     WithChunkReading,
     WithValidation,
+    WithEvents,
     ShouldQueue
 {
-        protected int $importJobId;
-public function __construct(int $importJobId)
+    protected int $importJobId;
+
+    public function __construct(int $importJobId)
     {
         $this->importJobId = $importJobId;
     }
-  public function model(array $row)
-{
-    ImportJob::where('id', $this->importJobId)
-        ->increment('processed_rows');
 
-    ImportJob::where('id', $this->importJobId)
-        ->update(['status' => 'processing']);
+    public function model(array $row)
+    {
+        ImportJob::where('id', $this->importJobId)
+            ->increment('processed_rows');
 
-    return new Product([
-        'name' => $row['name'],
-        'description' => $row['description'] ?? null,
-        'price' => $row['price'],
-        'category' => $row['category'],
-        'stock' => $row['stock'],
-        'image' => $row['image'] ?? '',
-    ]);
-}
+        ImportJob::where('id', $this->importJobId)
+            ->update(['status' => 'processing']);
 
+        return new Product([
+            'name' => $row['name'],
+            'description' => $row['description'] ?? null,
+            'price' => $row['price'],
+            'category' => $row['category'],
+            'stock' => $row['stock'],
+            'image' => $row['image'] ?? null, 
+        ]);
+    }
 
     public function rules(): array
     {
@@ -56,10 +59,15 @@ public function __construct(int $importJobId)
     {
         return 1000;
     }
-    public function __destruct()
-{
-    ImportJob::where('id', $this->importJobId)
-        ->update(['status' => 'completed']);
-}
 
+    
+    public function registerEvents(): array
+    {
+        return [
+            AfterImport::class => function () {
+                ImportJob::where('id', $this->importJobId)
+                    ->update(['status' => 'completed']);
+            },
+        ];
+    }
 }
