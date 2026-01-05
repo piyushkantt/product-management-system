@@ -1,28 +1,26 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Broadcast;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductImportController;
 use App\Http\Controllers\Admin\ImportProgressController;
-use App\Http\Controllers\Admin\CustomerController;
-use App\Models\Product;
 
 /*
 |--------------------------------------------------------------------------
-| Broadcast Routes (REQUIRED)
+| Web Routes
 |--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
 */
-Broadcast::routes([
-    'middleware' => ['web', 'auth'],
-]);
 
-/*
-|--------------------------------------------------------------------------
-| Guest Routes
-|--------------------------------------------------------------------------
-*/
+Route::get('/', function () {
+    return view('welcome');
+});
+
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -30,34 +28,33 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister']);
     Route::post('/register', [AuthController::class, 'register']);
 });
-
-/*
-|--------------------------------------------------------------------------
-| Authenticated Routes
-|--------------------------------------------------------------------------
-*/
 Route::middleware('auth')->group(function () {
 
     Route::get('/dashboard', function () {
         if (auth()->user()->role === 'admin') {
             return view('admin.dashboard');
         }
-
-        $products = Product::latest()->paginate(9);
-        return view('customer.dashboard', compact('products'));
     })->name('dashboard');
-
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
     Route::middleware('role:admin')
         ->prefix('admin')
         ->name('admin.')
         ->group(function () {
             Route::get('/dashboard', fn () => view('admin.dashboard'))
                 ->name('dashboard');
-
-            Route::resource('products', ProductController::class)
+                   Route::resource('products', ProductController::class)
                 ->except(['show']);
 
+            Route::get('products/import', [ProductImportController::class, 'showImportForm'])
+                ->name('products.import.form');
+
+            Route::post('products/import', [ProductImportController::class, 'import'])
+                ->name('products.import');
+
+            Route::get(
+                'import-jobs/{importJob}',
+                [ImportProgressController::class, 'show']
+            )->name('import.progress');
+          
         });
 });

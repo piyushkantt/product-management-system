@@ -6,6 +6,10 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="mb-0">Products</h3>
     <div class="d-flex gap-2">
+         <a href="{{ route('admin.products.import.form') }}"
+           class="btn btn-outline-secondary">
+            Import Products
+        </a>
         <a href="{{ route('admin.products.create') }}"
            class="btn btn-primary">
             Add Product
@@ -48,17 +52,14 @@
                             </td>
 
                             <td class="text-center">
-                                @if($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}"
+                                    <img src="{{ $product->image 
+        ? asset('products/' . $product->image) 
+        : asset('images/default.png') }}"
                                          width="50"
                                          height="50"
                                          class="rounded border"
                                          alt="Product Image">
-                                @else
-                                    <span class="text-muted">N/A</span>
-                                @endif
                             </td>
-
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
                                     <a href="{{ route('admin.products.edit', $product) }}"

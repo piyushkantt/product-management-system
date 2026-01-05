@@ -75,6 +75,7 @@ public function update(Request $request, Product $product)
 public function destroy(Product $product)
 {
     $product->delete();
+
     return redirect()->route('admin.products.index')
         ->with('success', 'Product deleted successfully');
 }

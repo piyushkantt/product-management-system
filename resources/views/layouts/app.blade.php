@@ -36,6 +36,12 @@
                             Products
                         </a>
                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.products.import.form') }}">
+                            Import Products
+                        </a>
+                    </li>
+                    
     </li>
                 @endif
             @endauth
