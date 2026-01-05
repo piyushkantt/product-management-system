@@ -1,66 +1,212 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+This project is built as part of a Laravel Developer Final Assignment, with emphasis on clean architecture, performance, and correctness, rather than UI polish.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
+ Authentication & Authorization
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Single users table with role-based access (admin, customer)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Customer registration via UI
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Admin users created via seeder
 
-## Learning Laravel
+Single AuthController
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Route protection using middleware (auth, role:admin)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Separate dashboards for Admin and Customer
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Product Management (Admin)
+----------------------------------------------
 
-## Laravel Sponsors
+Full CRUD for products
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Fields:
 
-### Premium Partners
+name
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+description
 
-## Contributing
+price
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+category
 
-## Code of Conduct
+stock
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+image (default fallback)
 
-## Security Vulnerabilities
+Clean controller and model separation
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Validation at request level
 
-## License
+Bulk Product Import 
+----------------------------------
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+CSV / Excel upload
+
+Chunked reading (1000 rows)
+
+Background processing using Laravel Queues
+
+Progress tracking using import_jobs table
+
+Import lifecycle handled via Excel events
+
+Default image automatically applied if missing
+
+No request timeout (queue-based)
+
+Sample file included:
+------------------------------------
+
+products_sample_import.csv
+
+ (WebSockets) for online offline check
+ -------------------------------------------
+
+
+Laravel WebSockets (local, no Pusher account)
+
+Presence Channels (no polling)
+
+Live Online / Offline customer status
+
+Status stored in DB (is_online)
+
+Updates broadcast on:
+
+presence-customers.online
+
+
+Admin dashboard reflects changes instantly
+
+Testing (Phase 7)
+
+Uses SQLite in-memory database for fast tests
+
+Tests run using:
+
+php artisan test
+
+Feature Tests
+-------------------------------
+Admin product creation
+
+Admin bulk product import
+
+Unit Tests
+
+Product default image logic
+
+All tests pass successfully.
+
+Tech Stack
+Layer	Technology
+Backend	Laravel 10
+Auth	Laravel Session Auth
+Realtime	Laravel WebSockets
+Queues	Database Queue
+Import	maatwebsite/excel
+Frontend	Blade + Bootstrap
+Tests	PHPUnit
+Build Tool	Vite
+Setup Instructions
+Clone Repository
+git clone https://github.com/piyushkantt/product-management-system.git
+cd product-management-system
+
+Use bellow Command to Install Dependencies
+---------------------------------------------
+composer install
+npm install
+
+Environment Setup
+--------------------------
+cp .env.example .env
+php artisan key:generate
+
+
+Update database credentials in .env.
+
+Migrate & Seed
+-----------------------------
+php artisan migrate
+php artisan db:seed
+
+Seeder creates an Admin user.
+----------------------------
+
+Build Frontend Assets
+<!-- -----------------------------/// documentation writen by Piush Kant tripathi---------///////// -->
+npm run build
+
+Start Services
+---------------------------
+
+Open three terminals:
+
+Terminal 1 – Laravel
+
+php artisan serve
+
+
+Terminal 2 – WebSockets
+
+php artisan websockets:serve
+
+
+Terminal 3 – Queue Worker
+
+php artisan queue:work
+
+ Default Admin Credentials (Seeder)
+ <!-- ----------------------- you may change using AdminSeeder---------------- -->
+Email: admin@example.com
+Password: password
+
+
+<!-- --------------------------- -->
+
+Import Flow Explanation
+
+Admin uploads CSV
+
+Rows counted for progress tracking
+
+Import job stored in DB
+
+File processed in background
+
+Progress updated row-by-row
+
+Status set to completed after import event
+
+<!-- To run Test I have used laravel build in UNIT testing tool -->
+php artisan test
+
+
+Uses:
+
+SQLite in-memory database
+
+Sync queue
+
+Broadcasting disabled for isolation
+
+ Architectural Decisions
+
+Single User table → simpler auth & tests
+
+Model-level defaults → consistent business rules
+
+Excel Events instead of destructors → deterministic & test-safe
+
+Presence Channels → real-time without polling
+
+Queue-based imports → scalable to 100k+ rows
+
+
+
+-----------Author------------------
+
+Piyush Kant Tripathi
+Laravel / Full-Stack Developer
