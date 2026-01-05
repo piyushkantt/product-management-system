@@ -8,12 +8,13 @@
             <div class="card-header bg-dark text-white">
                 <h5 class="mb-0">Import Products</h5>
             </div>
+
             <div class="card-body">
 
                 <p class="text-muted">
                     Upload a CSV or Excel file to import products in bulk.
                 </p>
-{{-- now we will continue import functionality --}}
+
                 <form
                     method="POST"
                     action="{{ route('admin.products.import') }}"
@@ -53,7 +54,7 @@
             </div>
 
             <div class="card-footer text-muted small">
-                <strong>Note:</strong> Large files are processed in the background. you can monitor the import status later.
+                <strong>Note:</strong> Large files are processed in the background.
             </div>
         </div>
 

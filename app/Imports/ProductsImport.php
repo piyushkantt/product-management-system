@@ -37,7 +37,7 @@ public function __construct(int $importJobId)
         'price' => $row['price'],
         'category' => $row['category'],
         'stock' => $row['stock'],
-        'image' => $row['image'] ?? 'default.png',
+        'image' => $row['image'] ?? '',
     ]);
 }
 

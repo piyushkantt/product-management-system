@@ -9,7 +9,7 @@
     <li class="list-group-item">
         <a href="{{ route('admin.products.index') }}">Manage Products</a>
     </li>
-     <li class="list-group-item">
+    <li class="list-group-item">
         <a href="{{ route('admin.products.import.form') }}">Import Products</a>
     </li>
 </ul>

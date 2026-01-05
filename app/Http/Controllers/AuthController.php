@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Events\CustomerStatusUpdated;
 use Illuminate\Support\Facades\Log;
 class AuthController extends Controller
 {
@@ -32,7 +33,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
         Log::info('User registered & online', ['user_id' => $user->id]);
-        
+        event(new CustomerStatusUpdated($user));
         return redirect()->route('dashboard')
             ->with('success', 'Account created successfully!');
     }
@@ -55,7 +56,7 @@ class AuthController extends Controller
                 'user_id' => $user->id,
             ]);
 
-         
+            event(new CustomerStatusUpdated($user));
 
             return redirect()->route('dashboard')
                 ->with('success', 'Welcome back!');
@@ -75,7 +76,7 @@ class AuthController extends Controller
                 'user_id' => $user->id,
             ]);
 
-           
+            event(new CustomerStatusUpdated($user));
         }
 
         Auth::logout();
